@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "format": "prettier --write ."
   },
   "repository": {
     "type": "git",
@@ -28,5 +29,8 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.3",
     "nodemon": "^3.1.11"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.2"
   }
 }
