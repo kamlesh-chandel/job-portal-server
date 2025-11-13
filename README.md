@@ -72,66 +72,13 @@ npm install
 ```bash
 MONGO_URI=your_mongo_connection_string
 JWT_SECRET=your_secret_key
-AWS_ACCESS_KEY=your_aws_access_key
-AWS_SECRET_KEY=your_aws_secret_key
-AWS_BUCKET_NAME=your_s3_bucket_name
-AWS_REGION=your_aws_region
-PORT=8000
+PORT=port_number
 ```
 ### Run the Server
 ```bash
 npm run dev
 ```
 ---
-
-## API Routes Overview
-
-### User Routes (/api/v1/user)
-
-| Endpoint              | Method | Description                                    |
-| --------------------- | ------ | ---------------------------------------------- |
-| `/register`           | POST   | Register a new user (Student or Recruiter)     |
-| `/login`              | POST   | Login existing user                            |
-| `/logout`             | GET    | Logout user                                    |
-| `/profile/update`     | POST   | Update user profile details (with file upload) |                    |                         |
-
-### Company Routes (/api/v1/company)
-
-| Endpoint      | Method | Description                            |
-| ------------- | ------ | -------------------------------------- |
-| `/register`   | POST   | Register a company                     |
-| `/get`        | GET    | Get all registered                     |
-
-
-
-### Job Routes (/api/v1/job)
-
-| Endpoint        | Method | Description           |
-| --------------- | ------ | --------------------- |
-| `/post`         | POST   | Create a new job      |
-| `/get`          | GET    | Get all jobs          |
-| `/getadminjobs` | GET    | Get recruiter’s jobs  |
-| `/get/:id`      | GET    | Get job details       |
-| `/save/:id`     | GET    | Save a job (bookmark) |
-| `/unsave/:id`   | GET    | Remove saved job      |
-
-
-### Application Routes (/api/v1/application)
-
-| Endpoint             | Method | Description                                        |
-| -------------------- | ------ | -------------------------------------------------- |
-| `/apply/:id`         | POST   | Apply for a job                                    |
-| `/get`               | GET    | Get all applied jobs (student view)                |
-| `/:id/applicants`    | GET    | Get applicants for a specific job (recruiter view) |
-| `/status/:id/update` | POST   | Update job application status                      |
-                           
-
-## Deployment
-- **Platform:** AWS EC2
-
-- **Database:** MongoDB Atlas
-
-- **File Storage:** AWS S3
 
 ## Security & Best Practices
 - All routes are protected using **JWT-based authentication**
