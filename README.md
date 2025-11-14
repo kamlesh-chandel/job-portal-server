@@ -15,15 +15,15 @@ It manages **user authentication**, **role-based access control**, **CRUD operat
 
 ## Tech Stack
 
-| Category | Technology |
-|-----------|-------------|
-| **Runtime Environment** | Node.js |
-| **Framework** | Express.js |
-| **Database** | MongoDB (via Mongoose) |
-| **Authentication** | JWT (JSON Web Token) |
-| **File Storage** | AWS S3 |
-| **Deployment** | AWS EC2 |
-| **Version Control** | Git & GitHub |
+| Category                | Technology             |
+| ----------------------- | ---------------------- |
+| **Runtime Environment** | Node.js                |
+| **Framework**           | Express.js             |
+| **Database**            | MongoDB (via Mongoose) |
+| **Authentication**      | JWT (JSON Web Token)   |
+| **File Storage**        | AWS S3                 |
+| **Deployment**          | AWS EC2                |
+| **Version Control**     | Git & GitHub           |
 
 ---
 
@@ -57,35 +57,47 @@ It manages **user authentication**, **role-based access control**, **CRUD operat
 ## Installation & Setup
 
 ### Clone the Repository
+
 ```bash
 git clone https://github.com/your-username/job-portal-backend.git
 ```
+
 ### Navigate into the project directory
+
 ```bash
 cd job-portal-backend
 ```
+
 ### Install Dependencies
+
 ```bash
 npm install
 ```
+
 ### Setup Environment Variables
+
 ```bash
 MONGO_URI=your_mongo_connection_string
 JWT_SECRET=your_secret_key
 PORT=port_number
 ```
+
 ### Run the Server
+
 ```bash
 npm run dev
 ```
+
 ---
 
 ## Security & Best Practices
+
 - All routes are protected using **JWT-based authentication**
 
 - Sensitive credentials stored in **.env** file
 
 ## Developed By
 
-**[Kamlesh Chandel](https://github.com/kamlesh-chandel)**  
+**[Kamlesh Chandel](https://github.com/kamlesh-chandel)**
+
 > MERN Stack Developer | Passionate about building scalable and secure web applications
