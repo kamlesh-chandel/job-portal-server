@@ -28,4 +28,9 @@ const submissionSchema = new mongoose.Schema(
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
 
+submissionSchema.index(
+  { job_id: 1, applicant_id: 1 },
+  { unique: true, partialFilterExpression: { deleted_at: null } }
+);
+
 export default mongoose.model('Submission', submissionSchema);

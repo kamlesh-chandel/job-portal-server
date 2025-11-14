@@ -5,8 +5,8 @@ const roleSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
-      enum: ['student', 'recruiter'],
       trim: true,
+      unique: true
     },
     deleted_at: { type: Date, default: null },
   },

@@ -17,4 +17,9 @@ const bookmarkSchema = new mongoose.Schema(
   { timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' } }
 );
 
+bookmarkSchema.index(
+  { user_id: 1, job_id: 1 },
+  { unique: true, partialFilterExpression: { deleted_at: null } }
+);
+
 export default mongoose.model('Bookmark', bookmarkSchema);
