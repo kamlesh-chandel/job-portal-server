@@ -2,24 +2,14 @@
   "name": "job-portal-app-server",
   "version": "1.0.0",
   "description": "Backend API for Job Portal App with role-based access and job management",
-  "main": "index.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index.js",
+    "dev": "nodemon src/index.js",
+    "test": "vitest --run",
+    "test:ui": "vitest --ui",
     "format": "prettier --write ."
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kamlesh-chandel/job-portal-server.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/kamlesh-chandel/job-portal-server/issues"
-  },
-  "homepage": "https://github.com/kamlesh-chandel/job-portal-server#readme",
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
@@ -31,6 +21,8 @@
     "nodemon": "^3.1.11"
   },
   "devDependencies": {
-    "prettier": "^3.6.2"
+    "prettier": "^3.6.2",
+    "supertest": "^7.1.4",
+    "vitest": "^2.1.1"
   }
 }
