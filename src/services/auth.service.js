@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import User from "../models/user.model.js";
 import Role from "../models/role.model.js";
 import UserRole from "../models/userRole.model.js";
-import jwt from "jsonwebtoken";
+import { generateAccessToken, generateRefreshToken } from "../utils/token.js";
 
 export const registerService = async ({ name, email, password, role }) => {
   if (!name || !email || !password || !role) {
@@ -55,16 +55,20 @@ export const loginService = async ({ email, password }) => {
     return { success: false, message: "User role not found", status: 400 };
   }
 
-  const token = jwt.sign(
-    { user_id: user._id, role: userRole.role_id.name },
-    process.env.JWT_SECRET
-  );
+  const payload = {
+    user_id: user._id,
+    role: userRole.role_id.name,
+  };
 
+  const accessToken = generateAccessToken(payload);
+  const refreshToken = generateRefreshToken(payload);
+  
   return {
     success: true,
     message: "Login successful",
     status: 200,
-    token,
+    accessToken,
+    refreshToken,
     user: {
       id: user._id,
       name: user.name,

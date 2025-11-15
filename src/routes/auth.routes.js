@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login } from "../controllers/auth.controller.js";
+import { register, login, refreshAccessToken } from "../controllers/auth.controller.js";
 import { validateRequest } from "../middlewares/validate.middleware.js";
 import { loginSchema, registerSchema } from "../validators/auth.validator.js";
 
@@ -12,5 +12,9 @@ router
 router
   .route("/login")
   .post(validateRequest(loginSchema), login);
+
+router
+  .route("/refresh-token")
+  .post(refreshAccessToken);
 
 export default router;
