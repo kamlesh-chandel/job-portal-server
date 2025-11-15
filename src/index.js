@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
 import authRoute from './routes/auth.routes.js'
+import { errorHandler } from "./middlewares/errorhandler.js";
 
 dotenv.config({});
 
@@ -14,6 +15,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
+
+app.use(errorHandler);
 
 const corsOption = {
   origin: 'http://localhost:5173',
