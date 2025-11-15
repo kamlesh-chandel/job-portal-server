@@ -3,7 +3,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
-import userRoute from './routes/user.routes.js'
+import authRoute from './routes/auth.routes.js'
 
 dotenv.config({});
 
@@ -25,7 +25,7 @@ app.use(cors(corsOption));
 
 const PORT = process.env.PORT || 3000;
 
-app.use("/api/v1/user", userRoute);
+app.use("/api/v1/auth", authRoute);
 
 app.listen(PORT, () => {
   connectDB();
