@@ -3,8 +3,13 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { connectDB } from './config/db.js';
-import authRoute from './routes/auth.routes.js'
+import authRoutes from './routes/auth.routes.js'
 import { errorHandler } from "./middlewares/errorhandler.js";
+import companyRoutes from './routes/company.routes.js';
+import jobRoutes from './routes/job.routes.js';
+import bookmarkRoutes from './routes/bookmark.routes.js';
+import userRoutes from './routes/user.routes.js';
+import submissionRoutes from './routes/submission.routes.js';
 
 dotenv.config({});
 
@@ -28,7 +33,12 @@ app.use(cors(corsOption));
 
 const PORT = process.env.PORT || 3000;
 
-app.use("/api/v1/auth", authRoute);
+app.use("/api/v1/auth", authRoutes);
+app.use('/api/v1/company', companyRoutes);
+app.use('/api/v1/job', jobRoutes);
+app.use('/api/v1/bookmark', bookmarkRoutes);
+app.use('/api/v1/user', userRoutes);
+app.use('/api/v1/submission', submissionRoutes);
 
 app.listen(PORT, () => {
   connectDB();
