@@ -5,9 +5,6 @@ import UserRole from "../models/userRole.model.js";
 import { generateAccessToken, generateRefreshToken } from "../utils/token.js";
 
 export const registerService = async ({ name, email, password, role }) => {
-  if (!name || !email || !password || !role) {
-    return { success: false, message: "Something is missing", status: 400 };
-  }
 
   const exists = await User.findOne({ email });
   if (exists) {
@@ -36,18 +33,15 @@ export const registerService = async ({ name, email, password, role }) => {
 };
 
 export const loginService = async ({ email, password }) => {
-  if (!email || !password) {
-    return { success: false, message: "Email and password are required", status: 400 };
-  }
 
   const user = await User.findOne({ email, deleted_at: null }).select("+password");
   if (!user) {
-    return { success: false, message: "Invalid email or password", status: 400 };
+    return { success: false, message: "Invalid email or password", status: 401 };
   }
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    return { success: false, message: "Invalid email or password", status: 400 };
+    return { success: false, message: "Invalid email or password", status: 401 };
   }
 
   const userRole = await UserRole.findOne({ user_id: user._id, deleted_at: null }).populate("role_id");
