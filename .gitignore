@@ -70,6 +70,9 @@ web_modules/
 .env.*
 !.env.example
 
+/src/.DS_Store
+.DS_Store
+
 # package lock file
 package-lock.json
 

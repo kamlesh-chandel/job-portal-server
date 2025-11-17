@@ -6,6 +6,8 @@ import { connectDB } from './config/db.js';
 import authRoute from './routes/auth.routes.js'
 import { errorHandler } from "./middlewares/errorhandler.js";
 import companyRoutes from './routes/company.routes.js';
+import jobRoutes from './routes/job.routes.js';
+import bookmarkRoutes from './routes/bookmark.routes.js';
 
 dotenv.config({});
 
@@ -17,10 +19,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
 
-app.use(errorHandler);
-
 const corsOption = {
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'http://localhost:5174'],
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
   credentials: true,
 };
@@ -31,6 +31,10 @@ const PORT = process.env.PORT || 3000;
 
 app.use("/api/v1/auth", authRoute);
 app.use('/api/v1/', companyRoutes);
+app.use('/api/v1/jobs', jobRoutes);
+app.use('/api/v1/bookmarks', bookmarkRoutes);
+
+app.use(errorHandler);
 
 app.listen(PORT, () => {
   connectDB();
