@@ -32,7 +32,7 @@ const PORT = process.env.PORT || 3000;
 app.use("/api/v1/auth", authRoute);
 app.use('/api/v1/', companyRoutes);
 app.use('/api/v1/jobs', jobRoutes);
-app.use('/api/v1/bookmark', bookmarkRoutes);
+app.use('/api/v1/bookmarks', bookmarkRoutes);
 
 app.use(errorHandler);
 

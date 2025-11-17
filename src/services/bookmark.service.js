@@ -7,7 +7,6 @@ const serializeBookmark = bookmarkDoc => {
   const b = bookmarkDoc.toObject ? bookmarkDoc.toObject() : bookmarkDoc;
 
   return {
-    id: b._id,
     userId: b.user_id?._id || b.user_id,
     jobId: b.job_id?._id || b.job_id,
     createdAt: b.created_at,
@@ -20,36 +19,29 @@ export const createBookmarkService = async (userId, jobId) => {
     return { success: false, status: 400, message: 'Invalid jobId' };
   }
 
-  const active = await Bookmark.findOne({
+  const existing = await Bookmark.findOne({
     user_id: userId,
     job_id: jobId,
-    deleted_at: null,
   });
 
-  if (active) {
+  if (existing && existing.deleted_at === null) {
     return {
       success: true,
       status: 200,
       message: 'Already saved',
-      bookmark: serializeBookmark(active),
+      bookmark: serializeBookmark(existing),
     };
   }
 
-  const deleted = await Bookmark.findOne({
-    user_id: userId,
-    job_id: jobId,
-    deleted_at: { $ne: null },
-  });
-
-  if (deleted) {
-    deleted.deleted_at = null;
-    await deleted.save();
+  if (existing && existing.deleted_at !== null) {
+    existing.deleted_at = null;
+    await existing.save();
 
     return {
       success: true,
       status: 200,
       message: 'Job saved successfully',
-      bookmark: serializeBookmark(deleted),
+      bookmark: serializeBookmark(existing),
     };
   }
 
@@ -66,14 +58,15 @@ export const createBookmarkService = async (userId, jobId) => {
   };
 };
 
-export const deleteBookmarkService = async (userId, jobId) => {
-  if (!mongoose.Types.ObjectId.isValid(jobId)) {
-    return { success: false, status: 400, message: 'Invalid jobId' };
+
+export const deleteBookmarkService = async (userId, bookmarkId) => {
+  if (!mongoose.Types.ObjectId.isValid(bookmarkId)) {
+    return { success: false, status: 400, message: 'Invalid bookmarkId' };
   }
 
   const bookmark = await Bookmark.findOne({
+    _id: bookmarkId,
     user_id: userId,
-    job_id: jobId,
     deleted_at: null,
   });
 

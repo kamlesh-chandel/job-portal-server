@@ -5,7 +5,7 @@ import {
   getRecruiterJobsService,
 } from '../services/job.service.js';
 import { sendResponse } from '../utils/api.response.js';
-import { ROLES } from '../utils/roles.js';
+import { ROLES } from '../constants/roles.js';
 
 export const createJob = async (req, res, next) => {
   try {

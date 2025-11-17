@@ -27,9 +27,9 @@ export const createBookmark = async (req, res, next) => {
 export const deleteBookmark = async (req, res, next) => {
   try {
     const userId = req.user?.user_id;
-    const { jobId } = req.body;
+    const { bookmarkId } = req.params;
 
-    const result = await deleteBookmarkService(userId, jobId);
+    const result = await deleteBookmarkService(userId, bookmarkId);
 
     return sendResponse(res, result.status, result.success, result.message);
   } catch (error) {
@@ -40,9 +40,10 @@ export const deleteBookmark = async (req, res, next) => {
 export const getBookmarks = async (req, res, next) => {
   try {
     const userId = req.user?.user_id;
+    const page = Number(req.query.page ?? 1);
     const limit = Number(req.query.limit ?? 10);
-    const offset = Number(req.query.offset ?? 0);
 
+    const offset = (page - 1) * limit;
     const result = await getBookmarksService({ userId, limit, offset });
 
     return sendResponse(

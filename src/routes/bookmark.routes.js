@@ -21,7 +21,7 @@ router.post(
 );
 
 router.delete(
-  '/',
+  '/:bookmarkId',
   authMiddleware,
   validateRequest(bookmarkBodySchema, 'body'),
   deleteBookmark
