@@ -8,6 +8,7 @@ import { authMiddleware } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validate.middleware.js';
 import {
   bookmarkBodySchema,
+  bookmarkParamsSchema,
   bookmarkQuerySchema,
 } from '../validators/bookmark.validator.js';
 
@@ -23,7 +24,7 @@ router.post(
 router.delete(
   '/:bookmarkId',
   authMiddleware,
-  validateRequest(bookmarkBodySchema, 'body'),
+  validateRequest(bookmarkParamsSchema, 'params'),
   deleteBookmark
 );
 
