@@ -42,18 +42,18 @@ export const createJobService = async (payload, user_id) => {
     description,
     requirements,
     salary,
-    experience_level,
+    experienceLevel,
     location,
-    job_type,
+    jobType,
     positions,
-    company_id,
+    companyId,
   } = payload;
 
-  if (!mongoose.Types.ObjectId.isValid(company_id)) {
+  if (!mongoose.Types.ObjectId.isValid(companyId)) {
     return { success: false, status: 400, message: 'Invalid company_id' };
   }
 
-  const company = await Company.findOne({ _id: company_id, deleted_at: null });
+  const company = await Company.findOne({ _id: companyId, deleted_at: null });
   if (!company) {
     return { success: false, status: 404, message: 'Company not found' };
   }
@@ -80,23 +80,24 @@ export const createJobService = async (payload, user_id) => {
     description,
     requirements: reqArray,
     salary,
-    experience_level,
+    experience_level: experienceLevel,
     location,
-    job_type,
+    job_type: jobType,
     positions,
-    company_id,
+    company_id: companyId,
     created_by: user_id,
   });
 
- const populated = await Job.findById(newJob._id)
-    .populate('company_id', 'name logo_url address user_id')
-    .populate('created_by', 'name email');
+  const populatedJob = await newJob.populate([
+    { path: 'company_id', select: 'name logo_url address user_id' },
+    { path: 'created_by', select: 'name email' },
+  ]);
 
   return {
     success: true,
     status: 201,
     message: 'Job posted successfully',
-    job: serializeJob(populated),
+    job: serializeJob(populatedJob),
   };
 };
 

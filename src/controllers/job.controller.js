@@ -5,6 +5,7 @@ import {
   getRecruiterJobsService,
 } from '../services/job.service.js';
 import { sendResponse } from '../utils/api.response.js';
+import { ROLES } from '../utils/roles.js';
 
 export const createJob = async (req, res, next) => {
   try {
@@ -13,7 +14,7 @@ export const createJob = async (req, res, next) => {
 
     if (!userId) return sendResponse(res, 401, false, 'Unauthorized');
 
-    if (role !== 'recruiter') {
+    if (role !== ROLES.RECRUITER) {
       return sendResponse(res, 403, false, 'Only recruiters can post jobs');
     }
 
@@ -75,7 +76,7 @@ export const getRecruiterJobs = async (req, res, next) => {
     const role = req.user?.role;
 
     if (!userId) return sendResponse(res, 401, false, 'Unauthorized');
-    if (role !== 'recruiter')
+    if (role !== ROLES.RECRUITER)
       return sendResponse(res, 403, false, 'Only recruiters can access this');
 
     const limit = Number(req.query.limit ?? 10);
