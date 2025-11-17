@@ -21,8 +21,6 @@ export const register = async (req, res, next) => {
 export const login = async (req, res, next) => {
   try {
     const result = await loginService(req.body);
-
-    // ❌ If login failed — no tokens, no cookie
     if (!result.success) {
       return sendResponse(
         res,
@@ -32,16 +30,13 @@ export const login = async (req, res, next) => {
         null
       );
     }
-
-    // ✔ Login success — set refresh token cookie
     res.cookie("refreshToken", result.refreshToken, {
       httpOnly: true,
-      secure: false, // set true in production
+      secure: false,
       sameSite: "strict",
       maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
-    // ✔ Send accessToken + user
     return sendResponse(
       res,
       result.status,
