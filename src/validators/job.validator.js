@@ -34,7 +34,16 @@ export const jobCreateSchema = z.object({
   companyId: objectIdString(),
 });
 
+
 export const jobQuerySchema = z.object({
+  page: z
+    .string()
+    .optional()
+    .transform(s => (s ? parseInt(s, 10) : 1))
+    .refine(n => Number.isFinite(n) && n >= 1, {
+      message: 'page must be >= 1',
+    }),
+
   limit: z
     .string()
     .optional()
@@ -42,12 +51,6 @@ export const jobQuerySchema = z.object({
     .refine(n => Number.isFinite(n) && n > 0, {
       message: 'limit must be a positive number',
     }),
-  offset: z
-    .string()
-    .optional()
-    .transform(s => (s ? parseInt(s, 10) : 0))
-    .refine(n => Number.isFinite(n) && n >= 0, {
-      message: 'offset must be >= 0',
-    }),
+
   q: z.string().optional(),
 });
