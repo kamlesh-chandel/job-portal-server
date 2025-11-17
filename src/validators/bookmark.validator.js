@@ -1,4 +1,11 @@
 import { z } from 'zod';
+import mongoose from 'mongoose';
+
+export const bookmarkParamsSchema = z.object({
+  jobId: z.string().refine(id => mongoose.Types.ObjectId.isValid(id), {
+    message: 'Invalid jobId',
+  }),
+});
 
 export const bookmarkQuerySchema = z.object({
   limit: z
