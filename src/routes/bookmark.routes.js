@@ -1,22 +1,30 @@
 import express from 'express';
 import {
-  toggleBookmark,
+  createBookmark,
+  deleteBookmark,
   getBookmarks,
 } from '../controllers/bookmark.controller.js';
 import { authMiddleware } from '../middlewares/auth.middleware.js';
 import { validateRequest } from '../middlewares/validate.middleware.js';
 import {
-  bookmarkParamsSchema,
+  bookmarkBodySchema,
   bookmarkQuerySchema,
 } from '../validators/bookmark.validator.js';
 
 const router = express.Router();
 
 router.post(
-  '/:jobId',
+  '/',
   authMiddleware,
-  validateRequest(bookmarkParamsSchema, 'params'),
-  toggleBookmark
+  validateRequest(bookmarkBodySchema, 'body'),
+  createBookmark
+);
+
+router.delete(
+  '/',
+  authMiddleware,
+  validateRequest(bookmarkBodySchema, 'body'),
+  deleteBookmark
 );
 
 router.get(

@@ -15,7 +15,7 @@ const serializeBookmark = bookmarkDoc => {
   };
 };
 
-export const toggleBookmarkService = async (userId, jobId) => {
+export const createBookmarkService = async (userId, jobId) => {
   if (!mongoose.Types.ObjectId.isValid(jobId)) {
     return { success: false, status: 400, message: 'Invalid jobId' };
   }
@@ -27,33 +27,29 @@ export const toggleBookmarkService = async (userId, jobId) => {
   });
 
   if (active) {
-    active.deleted_at = new Date();
-    await active.save();
-
     return {
       success: true,
       status: 200,
-      message: 'Job removed from saved list',
-      action: 'unsaved',
+      message: 'Already saved',
+      bookmark: serializeBookmark(active),
     };
   }
 
-  const deletedBookmark = await Bookmark.findOne({
+  const deleted = await Bookmark.findOne({
     user_id: userId,
     job_id: jobId,
     deleted_at: { $ne: null },
   });
 
-  if (deletedBookmark) {
-    deletedBookmark.deleted_at = null;
-    await deletedBookmark.save();
+  if (deleted) {
+    deleted.deleted_at = null;
+    await deleted.save();
 
     return {
       success: true,
       status: 200,
       message: 'Job saved successfully',
-      action: 'saved',
-      bookmark: serializeBookmark(deletedBookmark),
+      bookmark: serializeBookmark(deleted),
     };
   }
 
@@ -66,8 +62,36 @@ export const toggleBookmarkService = async (userId, jobId) => {
     success: true,
     status: 201,
     message: 'Job saved successfully',
-    action: 'saved',
     bookmark: serializeBookmark(newBookmark),
+  };
+};
+
+export const deleteBookmarkService = async (userId, jobId) => {
+  if (!mongoose.Types.ObjectId.isValid(jobId)) {
+    return { success: false, status: 400, message: 'Invalid jobId' };
+  }
+
+  const bookmark = await Bookmark.findOne({
+    user_id: userId,
+    job_id: jobId,
+    deleted_at: null,
+  });
+
+  if (!bookmark) {
+    return {
+      success: false,
+      status: 404,
+      message: 'Bookmark not found',
+    };
+  }
+
+  bookmark.deleted_at = new Date();
+  await bookmark.save();
+
+  return {
+    success: true,
+    status: 200,
+    message: 'Job removed from saved list',
   };
 };
 

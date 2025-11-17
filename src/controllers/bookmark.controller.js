@@ -1,27 +1,37 @@
 import {
-  toggleBookmarkService,
+  createBookmarkService,
+  deleteBookmarkService,
   getBookmarksService,
 } from '../services/bookmark.service.js';
 import { sendResponse } from '../utils/api.response.js';
 
-export const toggleBookmark = async (req, res, next) => {
+export const createBookmark = async (req, res, next) => {
   try {
     const userId = req.user?.user_id;
-    const jobId = req.params.jobId;
+    const { jobId } = req.body;
 
-    if (!userId) {
-      return sendResponse(res, 401, false, 'Unauthorized');
-    }
-
-    const result = await toggleBookmarkService(userId, jobId);
+    const result = await createBookmarkService(userId, jobId);
 
     return sendResponse(
       res,
       result.status,
       result.success,
       result.message,
-      result.bookmark || { action: result.action }
+      result.bookmark
     );
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteBookmark = async (req, res, next) => {
+  try {
+    const userId = req.user?.user_id;
+    const { jobId } = req.body;
+
+    const result = await deleteBookmarkService(userId, jobId);
+
+    return sendResponse(res, result.status, result.success, result.message);
   } catch (error) {
     next(error);
   }

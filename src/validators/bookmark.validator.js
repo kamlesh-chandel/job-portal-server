@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import mongoose from 'mongoose';
 
-export const bookmarkParamsSchema = z.object({
+export const bookmarkBodySchema = z.object({
   jobId: z.string().refine(id => mongoose.Types.ObjectId.isValid(id), {
     message: 'Invalid jobId',
   }),
