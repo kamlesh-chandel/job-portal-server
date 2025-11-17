@@ -54,7 +54,6 @@ export const getAllJobs = async (req, res, next) => {
   }
 };
 
-
 export const getJobById = async (req, res, next) => {
   try {
     const jobId = req.params.id;
@@ -82,8 +81,10 @@ export const getRecruiterJobs = async (req, res, next) => {
     if (role !== ROLES.RECRUITER)
       return sendResponse(res, 403, false, 'Only recruiters can access this');
 
+    const page = Number(req.query.page ?? 1);
     const limit = Number(req.query.limit ?? 10);
-    const offset = Number(req.query.offset ?? 0);
+
+    const offset = (page - 1) * limit;
 
     const result = await getRecruiterJobsService({ userId, limit, offset });
 
@@ -98,3 +99,4 @@ export const getRecruiterJobs = async (req, res, next) => {
     next(error);
   }
 };
+
