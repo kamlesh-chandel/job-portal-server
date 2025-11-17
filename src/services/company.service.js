@@ -1,7 +1,6 @@
 import Company from '../models/company.model.js';
 import cloudinary from '../config/cloudinary.js';
 
-/* ------------------------ COMMON SERIALIZER ------------------------ */
 const serializeCompany = company => {
   if (!company) return null;
 
@@ -19,7 +18,6 @@ const serializeCompany = company => {
   };
 };
 
-/* ----------------------- REGISTER COMPANY -------------------------- */
 export const registerCompanyService = async (data, user_id, file) => {
   let logo_url = null;
 
@@ -53,7 +51,6 @@ export const registerCompanyService = async (data, user_id, file) => {
   };
 };
 
-/* ----------------- GET COMPANIES (PAGINATION ADDED) ---------------- */
 export const getCompaniesByRecruiterService = async (
   user_id,
   page,
@@ -88,7 +85,6 @@ export const getCompaniesByRecruiterService = async (
   };
 };
 
-/* ------------------------- UPDATE COMPANY -------------------------- */
 export const updateCompanyService = async (company_id, user_id, data, file) => {
   const company = await Company.findOne({
     _id: company_id,

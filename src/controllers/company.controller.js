@@ -22,7 +22,7 @@ export const registerCompany = async (req, res, next) => {
 
 export const getMyCompanies = async (req, res, next) => {
   try {
-    const { page, limit } = req.validatedQuery; // ✅ fixed
+    const { page, limit } = req.validatedQuery;
     const user_id = req.user?.user_id;
 
     const result = await getCompaniesByRecruiterService(user_id, page, limit);
