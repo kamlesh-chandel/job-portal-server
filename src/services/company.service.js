@@ -1,6 +1,25 @@
 import Company from '../models/company.model.js';
 import cloudinary from '../config/cloudinary.js';
 
+/* ------------------------ COMMON SERIALIZER ------------------------ */
+const serializeCompany = company => {
+  if (!company) return null;
+
+  const obj = company.toObject();
+
+  return {
+    id: obj._id,
+    name: obj.name,
+    website: obj.website,
+    address: obj.address,
+    logoUrl: obj.logo_url,
+    userId: obj.user_id,
+    createdAt: obj.created_at,
+    updatedAt: obj.updated_at,
+  };
+};
+
+/* ----------------------- REGISTER COMPANY -------------------------- */
 export const registerCompanyService = async (data, user_id, file) => {
   let logo_url = null;
 
@@ -30,12 +49,27 @@ export const registerCompanyService = async (data, user_id, file) => {
     success: true,
     status: 201,
     message: 'Company registered successfully',
-    company: newCompany,
+    company: serializeCompany(newCompany),
   };
 };
 
-export const getCompaniesByRecruiterService = async user_id => {
+/* ----------------- GET COMPANIES (PAGINATION ADDED) ---------------- */
+export const getCompaniesByRecruiterService = async (
+  user_id,
+  page,
+  limit
+) => {
+  const skip = (page - 1) * limit;
+
   const companies = await Company.find({
+    user_id,
+    deleted_at: null,
+  })
+    .skip(skip)
+    .limit(limit)
+    .sort({ created_at: -1 });
+
+  const total = await Company.countDocuments({
     user_id,
     deleted_at: null,
   });
@@ -44,16 +78,24 @@ export const getCompaniesByRecruiterService = async user_id => {
     success: true,
     status: 200,
     message: 'Companies fetched successfully',
-    companies,
+    companies: companies.map(c => serializeCompany(c)),
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
   };
 };
 
+/* ------------------------- UPDATE COMPANY -------------------------- */
 export const updateCompanyService = async (company_id, user_id, data, file) => {
   const company = await Company.findOne({
     _id: company_id,
     user_id,
     deleted_at: null,
   });
+
   if (!company) {
     return {
       success: false,
@@ -69,6 +111,7 @@ export const updateCompanyService = async (company_id, user_id, data, file) => {
       const publicId = logo_url.split('/').pop().split('.')[0];
       await cloudinary.uploader.destroy(`jobportal/companies/${publicId}`);
     }
+
     const uploadPromise = new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(
         { folder: 'jobportal/companies' },
@@ -96,6 +139,6 @@ export const updateCompanyService = async (company_id, user_id, data, file) => {
     success: true,
     status: 200,
     message: 'Company updated successfully',
-    company: updatedCompany,
+    company: serializeCompany(updatedCompany),
   };
 };

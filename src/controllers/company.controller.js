@@ -4,9 +4,9 @@ import { registerCompanyService, getCompaniesByRecruiterService, updateCompanySe
 export const registerCompany = async (req, res, next) => {
   try {
     const user_id = req.user?.user_id;
-    const file = req.file;
+    const file = req.files;
 
-    const result = await registerCompanyService(req.body, user_id, file);
+    const result = await registerCompanyService(req.body, user_id,file);
 
     return sendResponse(
       res,
@@ -22,9 +22,10 @@ export const registerCompany = async (req, res, next) => {
 
 export const getMyCompanies = async (req, res, next) => {
   try {
+    const { page, limit } = req.validatedQuery; // ✅ fixed
     const user_id = req.user?.user_id;
 
-    const result = await getCompaniesByRecruiterService(user_id);
+    const result = await getCompaniesByRecruiterService(user_id, page, limit);
 
     return sendResponse(
       res,
@@ -37,6 +38,7 @@ export const getMyCompanies = async (req, res, next) => {
     next(error);
   }
 };
+
 
 export const updateCompany = async (req, res, next) => {
   try {

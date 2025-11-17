@@ -11,5 +11,19 @@ export const companyRegisterSchema = z.object({
       country: z.string().optional(),
     })
     .optional(),
-  logo_url: z.string().optional(),
+  logo: z.any().optional(),
+});
+
+
+export const getCompaniesQuerySchema = z.object({
+  page: z
+    .string()
+    .transform(val => Number(val))
+    .default('1')
+    .refine(v => v >= 1, 'Page must be >= 1'),
+  limit: z
+    .string()
+    .transform(val => Number(val))
+    .default('10')
+    .refine(v => v >= 1 && v <= 100, 'Limit must be between 1 and 100'),
 });
