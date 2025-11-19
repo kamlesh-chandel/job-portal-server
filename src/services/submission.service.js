@@ -1,13 +1,14 @@
 import Submission from '../models/submission.model.js';
 import Job from '../models/job.model.js';
 import mongoose from 'mongoose';
+import { ROLES } from '../constants/roles.js';
 
 export const applyJobService = async (user_id, role, job_id) => {
   if (!mongoose.Types.ObjectId.isValid(job_id)) {
     return { success: false, status: 400, message: 'Invalid job_id' };
   }
 
-  if (role !== 'student') {
+  if (role !== ROLES.STUDENT) {
     return { success: false, status: 403, message: 'Only students can apply' };
   }
 
@@ -88,7 +89,7 @@ export const getAppliedJobsService = async (user_id, role) => {
       populate: {
         path: 'company_id',
         select: 'name logo_url',
-        select: '-deleted_at'
+        select: '-deleted_at',
       },
     })
     .select('-deleted_at')
@@ -102,33 +103,62 @@ export const getAppliedJobsService = async (user_id, role) => {
   };
 };
 
-export const getApplicantsService = async (user_id, role, job_id) => {
-  if (role !== 'recruiter') {
+export const getApplicantsService = async (user_id, role, jobId) => {
+
+  const normalizedRole = String(role ?? '').toLowerCase();
+
+  if (normalizedRole !== 'recruiter') {
     return {
       success: false,
       status: 403,
       message: 'Only recruiters can view applicants',
     };
   }
-  const job = await Job.findOne({ _id: job_id, deleted_at: null });
+
+  if (!mongoose.Types.ObjectId.isValid(jobId)) {
+    return { success: false, status: 400, message: 'Invalid jobId' };
+  }
+
+  const job = await Job.findOne({ _id: jobId, deleted_at: null });
 
   if (!job) {
     return { success: false, status: 404, message: 'Job not found' };
   }
 
-  if (job.created_by.toString() !== user_id) {
+  // safe comparison: handle job.created_by as ObjectId or string
+  const jobOwner = job.created_by ?? job.createdBy ?? job.createdById ?? null;
+
+  // debug log to help if it still fails (remove in production)
+  console.log('getApplicantsService debug:', {
+    user_id,
+    role,
+    normalizedRole,
+    jobId,
+    jobOwner: jobOwner ? jobOwner.toString() : jobOwner,
+  });
+
+  // if jobOwner is a mongoose ObjectId, use .equals()
+  const isOwner =
+    jobOwner &&
+    (typeof jobOwner.equals === 'function'
+      ? jobOwner.equals(String(user_id))
+      : String(jobOwner) === String(user_id));
+
+  if (!isOwner) {
     return {
       success: false,
       status: 403,
       message: 'You can only view applicants for your own jobs',
     };
   }
-  const applicants = await Submission.find({
-    job_id,
-    deleted_at: null,
-  })
-    .populate('applicant_id', 'name email profile skills social_links')
-    .sort({ created_at: -1 });
+
+const applicants = await Submission.find({
+  job_id: jobId,
+  deleted_at: null,
+})
+  .populate('applicant_id', 'name email profile skills social_links')
+  .sort({ created_at: -1 });
+
 
   return {
     success: true,
@@ -137,6 +167,7 @@ export const getApplicantsService = async (user_id, role, job_id) => {
     applicants,
   };
 };
+
 
 export const updateApplicationStatusService = async (
   user_id,

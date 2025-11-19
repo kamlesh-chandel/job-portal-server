@@ -29,7 +29,7 @@ export const applyJob = async (req, res, next) => {
 
 export const checkSubmissionStatus = async (req, res) => {
   try {
-    const { jobId } = req.params;
+    const { jobId } = req.query;
     const userId = req.user.user_id;
 
     const applied = await checkSubmissionStatusService(jobId, userId);
@@ -68,11 +68,17 @@ export const getAppliedJobs = async (req, res, next) => {
 
 export const getApplicants = async (req, res, next) => {
   try {
-    const user_id = req.user?.user_id;
-    const role = req.user?.role;
-    const { job_id } = req.params;
+    const user_id = req.user?.user_id ?? req.user?.userId ?? null;
+    const role = req.user?.role ?? null;
+    const jobId = req.query?.jobId ?? req.query?.job_id;
+    if (!user_id || !role) {
+      return sendResponse(res, 401, false, 'Unauthorized: missing user info', null);
+    }
+    if (!jobId) {
+      return sendResponse(res, 400, false, 'Missing jobId query parameter', null);
+    }
 
-    const result = await getApplicantsService(user_id, role, job_id);
+    const result = await getApplicantsService(user_id, role, jobId);
 
     return sendResponse(
       res,
@@ -86,17 +92,18 @@ export const getApplicants = async (req, res, next) => {
   }
 };
 
+
 export const updateApplicationStatus = async (req, res, next) => {
   try {
     const user_id = req.user?.user_id;
     const role = req.user?.role;
-    const { submission_id } = req.params;
+    const { submissionId } = req.params;
     const { status } = req.body;
 
     const result = await updateApplicationStatusService(
       user_id,
       role,
-      submission_id,
+      submissionId,
       status
     );
 
