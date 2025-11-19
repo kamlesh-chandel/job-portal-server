@@ -15,19 +15,14 @@ import {
 
 const router = express.Router();
 
-// Student apply job
 router.post('/', authMiddleware, validateRequest(applyJobSchema), applyJob);
 
-// Student: check if already applied
 router.get('/check', authMiddleware, checkSubmissionStatus);
 
-// Recruiter: get applicants for a job
 router.get('/applicants', authMiddleware, getApplicants);
 
-// Student: get all applied jobs
 router.get('/applied', authMiddleware, getAppliedJobs);
 
-// Recruiter: update status of an application
 router.patch(
   '/:submissionId',
   authMiddleware,

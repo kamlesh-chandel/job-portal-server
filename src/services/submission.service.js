@@ -125,19 +125,8 @@ export const getApplicantsService = async (user_id, role, jobId) => {
     return { success: false, status: 404, message: 'Job not found' };
   }
 
-  // safe comparison: handle job.created_by as ObjectId or string
   const jobOwner = job.created_by ?? job.createdBy ?? job.createdById ?? null;
 
-  // debug log to help if it still fails (remove in production)
-  console.log('getApplicantsService debug:', {
-    user_id,
-    role,
-    normalizedRole,
-    jobId,
-    jobOwner: jobOwner ? jobOwner.toString() : jobOwner,
-  });
-
-  // if jobOwner is a mongoose ObjectId, use .equals()
   const isOwner =
     jobOwner &&
     (typeof jobOwner.equals === 'function'
