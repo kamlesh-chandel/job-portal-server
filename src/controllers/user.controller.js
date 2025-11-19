@@ -24,9 +24,9 @@ export const updateProfile = async (req, res, next) => {
 
 export const updateProfilePhoto = async (req, res, next) => {
   try {
-    const user_id = req.user?.user_id;
+    const user_id = req.user?.user_id || req.user?.id || req.user?._id;
     const file = req.file;
-    console.log(file)
+
     if (!file) {
       return sendResponse(res, 400, false, 'No profile photo uploaded');
     }
