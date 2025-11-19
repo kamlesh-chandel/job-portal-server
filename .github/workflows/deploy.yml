@@ -9,27 +9,39 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Checkout Code
-      - name: Checkout repo
+      # Step 1: Checkout repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Setup Node
+      # Step 2: Setup Node.js
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      # Install Dependencies
-      - name: Install backend deps
+      # Step 3: Create .env file for testing (CI environment)
+      - name: Create env file
+        run: |
+          echo "PORT=8000" >> .env
+          echo "MONGO_URI=${{ secrets.MONGO_URI }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "JWT_REFRESH_SECRET=${{ secrets.JWT_REFRESH_SECRET }}" >> .env
+          echo "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" >> .env
+          echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> .env
+          echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> .env
+
+      # Step 4: Install dependencies
+      - name: Install dependencies
         run: npm install
 
-      # Run tests
+      # Step 5: Run tests
       - name: Run tests
         run: npm test
 
-      # Deploy to EC2
+      # Step 6: Deploy ONLY if tests pass
       - name: Deploy to EC2
+        if: success()
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
