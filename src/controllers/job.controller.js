@@ -57,7 +57,6 @@ export const getAllJobs = async (req, res, next) => {
 export const getJobById = async (req, res, next) => {
   try {
     const jobId = req.params.id;
-
     const result = await getJobByIdService(jobId);
 
     return sendResponse(

@@ -3,16 +3,39 @@ import mongoose from 'mongoose';
 
 const serializeBookmark = bookmarkDoc => {
   if (!bookmarkDoc) return null;
-
-  const b = bookmarkDoc.toObject ? bookmarkDoc.toObject() : bookmarkDoc;
+  const bookmark = bookmarkDoc.toObject ? bookmarkDoc.toObject() : bookmarkDoc;
+  const job = bookmark.job_id;
 
   return {
-    userId: b.user_id?._id || b.user_id,
-    jobId: b.job_id?._id || b.job_id,
-    createdAt: b.created_at,
-    updatedAt: b.updated_at,
+    id: bookmark._id,
+    userId: bookmark.user_id?._id || bookmark.user_id,
+    jobId: job?._id,
+    createdAt: bookmark.created_at,
+    updatedAt: bookmark.updated_at,
+
+    job: job
+      ? {
+          id: job._id,
+          title: job.title,
+          description: job.description,
+          salary: job.salary,
+          jobType: job.job_type,
+          positions: job.positions,
+          createdAt: job.created_at,
+
+          company: job.company_id
+            ? {
+                id: job.company_id._id,
+                name: job.company_id.name,
+                logo_url: job.company_id.logo_url,
+                address: job.company_id.address,
+              }
+            : null,
+        }
+      : null,
   };
 };
+
 
 export const createBookmarkService = async (userId, jobId) => {
   if (!mongoose.Types.ObjectId.isValid(jobId)) {
@@ -98,7 +121,13 @@ export const getBookmarksService = async ({
   const [total, bookmarks] = await Promise.all([
     Bookmark.countDocuments(filter),
     Bookmark.find(filter)
-      .populate('job_id')
+      .populate({
+        path: 'job_id',
+        populate: {
+          path: 'company_id',
+          select: 'name logo_url address',
+        },
+      })
       .sort({ created_at: -1 })
       .skip(Number(offset))
       .limit(Number(limit)),

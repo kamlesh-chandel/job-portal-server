@@ -4,10 +4,8 @@ import { registerCompanyService, getCompaniesByRecruiterService, updateCompanySe
 export const registerCompany = async (req, res, next) => {
   try {
     const user_id = req.user?.user_id;
-    const file = req.files;
-
+    const file = req.file;
     const result = await registerCompanyService(req.body, user_id,file);
-
     return sendResponse(
       res,
       result.status,

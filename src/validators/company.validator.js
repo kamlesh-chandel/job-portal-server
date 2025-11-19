@@ -2,7 +2,9 @@ import { z } from 'zod';
 
 export const companyRegisterSchema = z.object({
   name: z.string().min(1, 'Company name is required'),
-  website: z.string().url('Invalid website URL').optional(),
+
+  website: z.string().url('Invalid website URL').optional().or(z.literal('')),
+
   address: z
     .object({
       street: z.string().optional(),
@@ -11,8 +13,10 @@ export const companyRegisterSchema = z.object({
       country: z.string().optional(),
     })
     .optional(),
+
   logo: z.any().optional(),
 });
+
 
 
 export const getCompaniesQuerySchema = z.object({

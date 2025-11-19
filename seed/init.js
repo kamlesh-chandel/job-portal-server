@@ -1,4 +1,3 @@
-// seed/init.js
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Role from '../src/models/role.model.js';
@@ -13,8 +12,7 @@ async function run() {
     });
     console.log('Connected to MongoDB');
 
-    // clear existing default roles (safe for idempotent seed)
-    await Role.deleteMany({ name: { $in: ['student', 'recruiter'] } });
+   await Role.deleteMany({ name: { $in: ['student', 'recruiter'] } });
 
     const roles = [
       { name: 'student' },
