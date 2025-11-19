@@ -13,7 +13,6 @@ import app from '../src/index.js';
 import User from '../src/models/user.model.js';
 import { generateAccessToken } from '../src/utils/token.js';
 
-// Mock Cloudinary
 vi.mock('../src/config/cloudinary.js', () => ({
   default: {
     uploader: {
