@@ -2,6 +2,12 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import authRoute from './routes/auth.routes.js';
+import companyRoutes from './routes/company.routes.js';
+import jobRoutes from './routes/job.routes.js';
+import bookmarkRoutes from './routes/bookmark.routes.js';
+import userRoutes from './routes/user.routes.js';
+import submissionRoutes from './routes/submission.routes.js';
 
 dotenv.config();
 
@@ -21,13 +27,6 @@ app.use(
     credentials: true,
   })
 );
-
-import authRoute from './routes/auth.routes.js';
-import companyRoutes from './routes/company.routes.js';
-import jobRoutes from './routes/job.routes.js';
-import bookmarkRoutes from './routes/bookmark.routes.js';
-import userRoutes from './routes/user.routes.js';
-import submissionRoutes from './routes/submission.routes.js';
 
 import { errorHandler } from './middlewares/errorhandler.js';
 import { connectDB } from './config/db.js';
