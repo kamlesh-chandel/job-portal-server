@@ -5,12 +5,35 @@ const serializeBookmark = bookmarkDoc => {
   if (!bookmarkDoc) return null;
 
   const b = bookmarkDoc.toObject ? bookmarkDoc.toObject() : bookmarkDoc;
+  const j = b.job_id;
 
   return {
+    id: b._id,
     userId: b.user_id?._id || b.user_id,
-    jobId: b.job_id?._id || b.job_id,
+    jobId: j?._id,
     createdAt: b.created_at,
     updatedAt: b.updated_at,
+
+    job: j
+      ? {
+          id: j._id,
+          title: j.title,
+          description: j.description,
+          salary: j.salary,
+          jobType: j.job_type,
+          positions: j.positions,
+          createdAt: j.created_at,
+
+          company: j.company_id
+            ? {
+                id: j.company_id._id,
+                name: j.company_id.name,
+                logo_url: j.company_id.logo_url,
+                address: j.company_id.address,
+              }
+            : null,
+        }
+      : null,
   };
 };
 
@@ -98,7 +121,13 @@ export const getBookmarksService = async ({
   const [total, bookmarks] = await Promise.all([
     Bookmark.countDocuments(filter),
     Bookmark.find(filter)
-      .populate('job_id')
+      .populate({
+        path: 'job_id',
+        populate: {
+          path: 'company_id',
+          select: 'name logo_url address',
+        },
+      })
       .sort({ created_at: -1 })
       .skip(Number(offset))
       .limit(Number(limit)),

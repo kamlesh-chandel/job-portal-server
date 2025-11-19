@@ -20,7 +20,6 @@ const serializeCompany = company => {
 
 export const registerCompanyService = async (data, user_id, file) => {
   let logo_url = null;
-
   if (file) {
     const uploadPromise = new Promise((resolve, reject) => {
       const stream = cloudinary.uploader.upload_stream(

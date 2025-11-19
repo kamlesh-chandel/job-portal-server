@@ -33,21 +33,39 @@ export const registerService = async ({ name, email, password, role }) => {
 };
 
 export const loginService = async ({ email, password }) => {
+  const user = await User.findOne({ email, deleted_at: null }).select(
+    '+password'
+  );
 
-  const user = await User.findOne({ email, deleted_at: null }).select("+password");
   if (!user) {
-    return { success: false, message: "Invalid email or password", status: 401 };
+    return {
+      success: false,
+      message: 'Invalid email or password',
+      status: 401,
+    };
   }
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    return { success: false, message: "Invalid email or password", status: 401 };
+    return {
+      success: false,
+      message: 'Invalid email or password',
+      status: 401,
+    };
   }
 
-  const userRole = await UserRole.findOne({ user_id: user._id, deleted_at: null }).populate("role_id");
+  const userRole = await UserRole.findOne({
+    user_id: user._id,
+    deleted_at: null,
+  }).populate('role_id');
+
   if (!userRole) {
-    return { success: false, message: "User role not found", status: 400 };
+    return { success: false, message: 'User role not found', status: 400 };
   }
+  const safeUser = await User.findById(user._id)
+    .select('-password')
+    .lean();
+  safeUser.role = userRole.role_id.name;
 
   const payload = {
     user_id: user._id,
@@ -56,18 +74,14 @@ export const loginService = async ({ email, password }) => {
 
   const accessToken = generateAccessToken(payload);
   const refreshToken = generateRefreshToken(payload);
-  
+
   return {
     success: true,
-    message: "Login successful",
+    message: 'Login successful',
     status: 200,
     accessToken,
     refreshToken,
-    user: {
-      id: user._id,
-      name: user.name,
-      email: user.email,
-      role: userRole.role_id.name,
-    },
+    user: safeUser,
   };
 };
+

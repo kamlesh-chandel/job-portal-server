@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "test": "vitest --run",
+    "test": "NODE_ENV=test vitest --run",
     "test:ui": "vitest --ui",
     "format": "prettier --write .",
     "seed": "node --experimental-specifier-resolution=node --es-module-specifier-resolution=node seed/init.js"
@@ -20,12 +20,14 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.19.3",
+    "multer": "^2.0.2",
     "nodemon": "^3.1.11",
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "mongodb-memory-server": "^10.3.0",
     "prettier": "^3.6.2",
     "supertest": "^7.1.4",
-    "vitest": "^2.1.1"
+    "vitest": "^2.1.9"
   }
 }

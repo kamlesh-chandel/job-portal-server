@@ -14,8 +14,6 @@ export const validateRequest = (schema, type = 'body') => {
         message: result.error.issues[0].message,
       });
     }
-
-    // Save validated data in safe place
     if (type === 'body') req.validatedBody = result.data;
     if (type === 'query') req.validatedQuery = result.data;
     if (type === 'params') req.validatedParams = result.data;
