@@ -5,5 +5,16 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./tests/setup/test-db.js'],
     environment: 'node',
+    reporters: ['default', 'junit'],
+
+    outputFile: {
+      junit: './test-results/junit-report.xml',
+    },
+
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html'],
+      reportsDirectory: './coverage',
+    },
   },
 });

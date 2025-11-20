@@ -9,18 +9,15 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Step 1: Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # Step 2: Setup Node.js
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 22
           cache: npm
 
-      # Step 3: Create .env file for testing (CI environment)
       - name: Create env file
         run: |
           echo "PORT=8000" >> .env
@@ -31,15 +28,25 @@ jobs:
           echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> .env
           echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> .env
 
-      # Step 4: Install dependencies
       - name: Install dependencies
         run: npm install
 
-      # Step 5: Run tests
       - name: Run tests
         run: npm test
 
-      # Step 6: Deploy ONLY if tests pass
+      # ⭐ Export test reports to GitHub
+      - name: Upload JUnit Test Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-report
+          path: test-results/junit-report.xml
+
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+
       - name: Deploy to EC2
         if: success()
         uses: appleboy/ssh-action@v1.0.3

@@ -25,6 +25,7 @@
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "junit-reporter": "^0.0.2",
     "mongodb-memory-server": "^10.3.0",
     "prettier": "^3.6.2",
     "supertest": "^7.1.4",
