@@ -34,7 +34,6 @@ jobs:
       - name: Run tests
         run: npm test
 
-      # ⭐ Export test reports to GitHub
       - name: Upload JUnit Test Report
         uses: actions/upload-artifact@v4
         with:
