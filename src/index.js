@@ -20,11 +20,9 @@ app.use(cookieParser());
 
 app.use(
   cors({
-    origin: [
-      'http://localhost:5173',
-      'http://localhost:5174',
-      'https://kamlesh.linenbazi.shop',
-    ],
+    origin: process.env.ALLOWED_ORIGINS
+      ? process.env.ALLOWED_ORIGINS.split(',')
+      : ['http://localhost:5173'],
     credentials: true,
   })
 );
@@ -44,7 +42,7 @@ app.use(errorHandler);
 if (process.env.NODE_ENV !== 'test') {
   const PORT = process.env.PORT || 3000;
 
-  connectDB(); 
+  connectDB();
   app.listen(PORT, () => {
     console.log(`Server running at port ${PORT}`);
   });
