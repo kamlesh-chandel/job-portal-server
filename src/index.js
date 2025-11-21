@@ -23,7 +23,7 @@ app.use(
     origin: [
       'http://localhost:5173',
       'http://localhost:5174',
-      'https://kamlesh.linenbazi.shop/api/v1',
+      'https://kamlesh.linenbazi.shop',
     ],
     credentials: true,
   })
